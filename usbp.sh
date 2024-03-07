@@ -44,9 +44,19 @@ setup_usb_gadget() {
   if ! sudo grep -q 'libcomposite' /etc/modules; then
     sudo sed -i '$a libcomposite' /etc/modules
   fi
-  if ! sudo grep -q 'denyinterfaces usb0' /etc/dhcpcd.conf; then
-    sudo sed -i '$a denyinterfaces usb0' /etc/dhcpcd.conf
-  fi
+  #if ! sudo grep -q 'denyinterfaces usb0' /etc/dhcpcd.conf; then
+  #  sudo sed -i '$a denyinterfaces usb0' /etc/dhcpcd.conf
+  #fi
+
+  cat << EOF > /etc/network/interfaces.d/usb0
+  auto usb0
+  allow-hotplug usb0
+  iface usb0 inet static
+      address 192.168.1.166
+      netmask 255.255.255.0
+      gateway 192.168.1.1
+  EOF
+  
   sudo mkdir -p /etc/dnsmasq.d
   sudo mkdir -p /etc/network/interfaces.d
   copy_as /etc/dnsmasq.d/usb
