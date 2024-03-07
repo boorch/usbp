@@ -21,6 +21,9 @@ copy_as() {
 }
 
 setup_usb_gadget() {
+
+  info "Apt-Hold goddamn firmware updates so wi-fi doesn't break"
+  sudo apt-mark hold firmware-atheros firmware-brcm80211 firmware-libertas firmware-misc-nonfree firmware-realtek
   info "Checking if already enabling access over USB..."
   if sudo test -f /root/usb.sh; then
     info "Already enabled"
