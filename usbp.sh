@@ -48,14 +48,31 @@ setup_usb_gadget() {
   #  sudo sed -i '$a denyinterfaces usb0' /etc/dhcpcd.conf
   #fi
 
-  cat << EOF > /etc/network/interfaces.d/usb0
-  auto usb0
-  allow-hotplug usb0
-  iface usb0 inet static
-      address 192.168.1.166
-      netmask 255.255.255.0
-      gateway 192.168.1.1
-  EOF
+  # Configuration as a string
+  CONFIG="auto usb0
+allow-hotplug usb0
+iface usb0 inet static
+    address 192.168.1.166
+    netmask 255.255.255.0
+    gateway 192.168.1.1"
+
+  # File path
+  FILE="/etc/network/interfaces.d/usb0"
+
+  # Ensure the directory exists
+  sudo mkdir -p $(dirname $FILE)
+
+  # Check if the file already contains this exact configuration
+  if ! sudo grep -Fxq "$CONFIG" $FILE; then
+    # Backup the existing configuration file, if necessary
+    sudo cp $FILE ${FILE}.bak || true  # Proceed if file does not exist
+
+    # Update the file with the new configuration
+    echo "$CONFIG" | sudo tee $FILE > /dev/null
+    echo "Updated configuration for usb0."
+  else
+    echo "Configuration for usb0 already up to date."
+  fi
   
   sudo mkdir -p /etc/dnsmasq.d
   sudo mkdir -p /etc/network/interfaces.d
