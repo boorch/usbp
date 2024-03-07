@@ -34,11 +34,11 @@ setup_usb_gadget() {
   fi
   step "Enabling access over USB..."
 
-  if ! sudo grep -q 'dtoverlay=dwc2' /boot/config.txt; then
-    sudo sed -i '$a dtoverlay=dwc2' /boot/config.txt
+  if ! sudo grep -q 'dtoverlay=dwc2' /boot/firmware/config.txt; then
+    sudo sed -i '$a dtoverlay=dwc2' /boot/firmware/config.txt
   fi
-  if ! sudo grep -q 'modules-load=dwc2' /boot/cmdline.txt; then
-    sudo sed -i '$s/$/ modules-load=dwc2/g' /boot/cmdline.txt
+  if ! sudo grep -q 'modules-load=dwc2' /boot/firmware/cmdline.txt; then
+    sudo sed -i '$s/$/ modules-load=dwc2/g' /boot/firmware/cmdline.txt
   fi
   sudo touch /boot/ssh
   if ! sudo grep -q 'libcomposite' /etc/modules; then
